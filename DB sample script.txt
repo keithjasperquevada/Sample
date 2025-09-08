@@ -1,0 +1,81 @@
+DROP USER EnrollmentApp CASCADE; 
+
+CREATE USER EnrollmentApp IDENTIFIED BY Changeme0; 
+ALTER USER EnrollmentApp QUOTA UNLIMITED ON DATA; 
+ALTER USER EnrollmentApp QUOTA UNLIMITED ON USERS; 
+
+GRANT CREATE SESSION TO EnrollmentApp WITH ADMIN OPTION; 
+GRANT CONNECT TO EnrollmentApp; 
+ALTER SESSION SET CURRENT_SCHEMA = EnrollmentApp; 
+
+DROP TABLE student cascade constraints;
+DROP TABLE courses cascade constraints;
+DROP TABLE instructors cascade constraints;
+DROP TABLE enrollment cascade constraints;
+
+CREATE TABLE student ( 
+StudentID varchar(20) PRIMARY KEY,
+StudentName varchar(50) ); 
+
+CREATE TABLE instructors ( 
+InstructorID varchar(20) PRIMARY KEY,
+InstructorName varchar(50) ); 
+
+CREATE TABLE courses ( 
+CourseID varchar(20) PRIMARY KEY,
+CourseName varchar(50),
+InstructorID varchar(20) ); 
+
+CREATE TABLE enrollment ( 
+StudentID varchar(20), 
+CourseID varchar(20), 
+Semester varchar(20), 
+Grade varchar(2) ); 
+
+ALTER TABLE courses  ADD CONSTRAINT fk_Instructor_ID FOREIGN KEY (InstructorID) REFERENCES instructors(InstructorID);
+ALTER TABLE enrollment  ADD CONSTRAINT fk_Student_ID FOREIGN KEY (StudentID) REFERENCES student(StudentID );
+ALTER TABLE enrollment ADD CONSTRAINT fk_Course_ID FOREIGN KEY (CourseID ) REFERENCES courses(CourseID );
+
+INSERT INTO Student (StudentID, StudentName) VALUES 
+(1001, 'Alice Smith');
+INSERT INTO Student (StudentID, StudentName) VALUES
+(1002, 'Bob Johnson');
+INSERT INTO Student (StudentID, StudentName) VALUES
+(1003, 'Carol White');
+
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES 
+(1, 'Mr. Brown');
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES 
+(2, 'Mrs. Green');
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES 
+(3, 'Dr. Black');
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES 
+(4, 'Dr. Grey');
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES 
+(5, 'Mr. Blue');
+
+INSERT INTO Courses (CourseID, CourseName, InstructorID) VALUES 
+(101, 'Math', 1);
+INSERT INTO Courses (CourseID, CourseName, InstructorID) VALUES
+(102, 'English', 2);
+INSERT INTO Courses (CourseID, CourseName, InstructorID) VALUES
+(103, 'History', 3);
+INSERT INTO Courses (CourseID, CourseName, InstructorID) VALUES
+(104, 'Science', 4);
+INSERT INTO Courses (CourseID, CourseName, InstructorID) VALUES
+(105, 'Art', 5);
+
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1001, 101, 'Fall 2025', 'A');
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1001, 102, 'Fall 2025', 'B+');
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1002, 101, 'Fall 2025', 'B');
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1003, 103, 'Fall 2025', 'A-');
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1003, 104, 'Fall 2025', 'B');
+INSERT INTO Enrollment (StudentID, CourseID, Semester, Grade) VALUES 
+(1003, 105, 'Fall 2025', 'A+');
+
+commit;
